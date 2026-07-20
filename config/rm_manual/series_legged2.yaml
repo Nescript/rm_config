@@ -15,14 +15,14 @@ rm_manual:
       - [ 45.0,12.5 ]
     accel_z:
       - [ 45.0,24.0 ]
-    safety_power: 70
+    safety_power: 60
     capacitor_threshold: 0.25
-    charge_power: 40
-    extra_power: 60
-    burst_power: 90
-    standard_power: 85
+    charge_power: 30
+    extra_power: 30
+    burst_power: 30
+    standard_power: 45
     buffer_threshold: 10
-    minimum_power: 40
+    minimum_power: 30
     power_gain: 0.0
     total_burst_time: 10
     is_new_capacitor: true
@@ -95,6 +95,10 @@ rm_manual:
       use_local_heat_: true
       local_heat_protect_threshold: 40
       type: "ID1_17MM"
+  cover:
+    topic: "/controllers/cover_controller/command"
+    on_pos: -1.460
+    off_pos: -0.02
   detection_switch:
     fail_limit: 10
     service_name: "/Processor/status_change"
