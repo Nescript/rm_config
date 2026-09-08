@@ -38,7 +38,8 @@ controllers:
     # ChassisBase
     publish_rate: 100
     enable_odom_tf: true
-    publish_odom_tf: false
+    publish_odom_tf: true
+    enable_map_tf: true
     power:
       effort_coeff: 2.30
       vel_coeff: 0.012
@@ -83,34 +84,35 @@ controllers:
 
   gimbal_controller:
     type: rm_gimbal_controllers/Controller
-    yaw:
-      joint: "yaw_joint"
-      pid: { p: 1.05, i: 20.0, d: 0.0, i_clamp_max: 0.3, i_clamp_min: -0.3, antiwindup: true, publish_state: true }
-      pid_pos: { p: 12.0, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
-      k_chassis_vel: 0.0
-      k_v: 1.0
-      accel: 40.0
-    pitch:
-      joint: "pitch_joint"
-      pid: { p: 1.6, i: 18.0, d: 0.0, i_clamp_max: 0.25, i_clamp_min: -0.25, antiwindup: true, publish_state: true }
-      pid_pos: { p: 18.0, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
-      k_v: 1.0
-      accel: 40.0
+    controllers:
+      yaw:
+        joint: "yaw_joint"
+        pid: { p: 2.2, i: 25.0, d: 0.0, i_clamp_max: 0.15, i_clamp_min: -0.15, antiwindup: true, publish_state: true }
+        pid_pos: { p: 10.0, i: 0.0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+        k_chassis_vel: 0.0
+        k_v: 1.0
+        accel: 40.0
+      pitch:
+        joint: "pitch_joint"
+        pid: { p: 1.2, i: 18.0, d: 0.0, i_clamp_max: 0.25, i_clamp_min: -0.25, antiwindup: true, publish_state: true }
+        pid_pos: { p: 20.0, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+        k_v: 1.0
+        accel: 40.0
     imu_name: "gimbal_imu"
     feedforward:
       gravity: 0.0
       enable_gravity_compensation: false
       mass_origin: [ 0.0,0.0,0.0 ]
     bullet_solver:
-      resistance_coff_qd_10: 0.001
-      resistance_coff_qd_15: 0.001
-      resistance_coff_qd_16: 0.001
-      resistance_coff_qd_18: 0.55
-      resistance_coff_qd_30: 3.0
+      resistance_coff_qd_10: 0.15
+      resistance_coff_qd_15: 0.15
+      resistance_coff_qd_16: 0.15
+      resistance_coff_qd_18: 0.15
+      resistance_coff_qd_30: 0.15
       g: 9.81
       delay: 0.32
-      wait_next_armor_delay: 0.121
-      wait_diagonal_armor_delay: 0.121
+      wait_next_armor_delay: 0.08
+      wait_diagonal_armor_delay: 0.12
       dt: 0.001
       timeout: 0.001
       publish_rate: 50
@@ -118,7 +120,7 @@ controllers:
       min_switch_angle: 2
       ban_shoot_duration: 0.0
       gimbal_switch_duration: 0.0
-      max_track_target_vel: 1.0
+      max_track_target_vel: 1.2
     chassis_vel:
       num_data: 20
       debug: true
@@ -139,21 +141,25 @@ controllers:
         mid_front_friction_wheel:
           joint: "mid_front_friction_wheel_joint"
           pid: { p: 0.001, i: 0.01, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+          wheel_speed_direction: -1.0
         mid_back_friction_wheel:
           joint: "mid_back_friction_wheel_joint"
           pid: { p: 0.001, i: 0.01, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
           wheel_speed_offset: -75
+          wheel_speed_direction: -1.0
       friction_right:
         right_front_friction_wheel:
           joint: "right_front_friction_wheel_joint"
           pid: { p: 0.001, i: 0.01, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+          wheel_speed_direction: -1.0
         right_back_friction_wheel:
           joint: "right_back_friction_wheel_joint"
           pid: { p: 0.001, i: 0.01, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
           wheel_speed_offset: -75
+          wheel_speed_direction: -1.0
     trigger:
       joint: "trigger_joint"
-      pid: { p: 20.0, i: 0.0, d: 0.65, i_clamp_max: 0.0, i_clamp_min: 0.0, antiwindup: true, publish_state: true }
+      pid: { p: 20.0, i: 0.0, d: 0.85, i_clamp_max: 0.0, i_clamp_min: 0.0, antiwindup: true, publish_state: true }
     push_per_rotation: 6
     push_qd_threshold: 0.85
     block_effort: 6.8

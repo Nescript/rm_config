@@ -1,0 +1,46 @@
+controllers:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+  robot_state_controller:
+    type: robot_state_controller/RobotStateController
+    publish_rate: 200
+
+  trigger_calibration_controller:
+    type: rm_calibration_controllers/MechanicalCalibrationController
+    actuator: [ trigger_joint_motor ]
+    velocity:
+      joint: trigger_joint
+      search_velocity: 3.1415
+      vel_threshold: 0.2
+      pid: { p: 0.3, i: 0, d: 0.0, i_clamp_max: 0.0, i_clamp_min: 0.0, antiwindup: true }
+
+  shooter_controller:
+    type: rm_shooter_controllers/Controller
+    publish_rate: 50
+    friction:
+      friction_left:
+        left_friction_wheel:
+          joint: "left_friction_wheel_joint"
+          pid: { p: 0.0007, i: 0.005, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+      friction_right:
+        right_friction_wheel:
+          joint: "right_friction_wheel_joint"
+          pid: { p: 0.0007, i: 0.005, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+          wheel_speed_direction: -1.0
+    trigger:
+      joint: "trigger_joint"
+      pid: { p: 30, i: 0.0, d: 1.0, i_clamp_max: 0.0, i_clamp_min: 0.0, antiwindup: true, publish_state: true }
+    push_per_rotation: 8
+    push_qd_threshold: 0.90
+    block_effort: 4.0
+    block_speed: 0.1
+    block_duration: 0.05
+    block_overtime: 0.5
+    anti_block_angle: 0.46
+    anti_block_threshold: 0.1
+    forward_push_threshold: 0.05
+    exit_push_threshold: 0.07
+    wheel_speed_drop_threshold: 4.8
+    wheel_speed_raise_threshold: 1.7
+    freq_threshold: 20.0

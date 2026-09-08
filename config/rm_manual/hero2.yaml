@@ -13,9 +13,10 @@ rm_manual:
     accel_z:
       - [ 50.0,99.0 ]
     safety_power: 60
-    capacitor_threshold: 0.2
+    capacitor_threshold: 0.3
+    capacitor_gyro_threshold: 0.5
     charge_power: 20
-    extra_power: 30
+    extra_power: 40
     burst_power: 220
     buffer_threshold: 10
     power_gain: 0
@@ -39,11 +40,13 @@ rm_manual:
     gyro_rotate_reduction: 0.70
   gimbal:
     topic: "/controllers/gimbal_controller/command"
-    max_yaw_vel: 10.00
-    max_pitch_vel: 10.00
+    max_yaw_vel: 3.14
+    max_pitch_vel: 6.28
+    time_constant_rc: 0.08
+    time_constant_pc: 0.08
     gimbal_scale: 5
     track_timeout: 0.5
-    eject_sensitivity: 0.1
+    eject_sensitivity: 0.5
     finish_turning_threshold: 2.9
     target_cost_function:
       k_pos: 1.0
@@ -53,14 +56,14 @@ rm_manual:
       timeout: 0.1
   shooter:
     topic: "/controllers/shooter_controller/command"
-    track_armor_error_tolerance: 0.15
+    track_armor_error_tolerance: 0.3
     target_acceleration_tolerance: 1.0
     accleration_moving_average_num: 10
-    speed_10m_per_speed: 15.8
-    speed_15m_per_speed: 15.8
-    speed_16m_per_speed: 15.8
-    speed_18m_per_speed: 18.0
-    speed_30m_per_speed: 30.0
+    speed_10m_per_speed: 15.9
+    speed_15m_per_speed: 15.9
+    speed_16m_per_speed: 15.9
+    speed_18m_per_speed: 15.9
+    speed_30m_per_speed: 15.9
     wheel_speed_10: 515.0
     wheel_speed_16: 515.0
     extra_wheel_speed_once: 5.0
@@ -77,12 +80,12 @@ rm_manual:
       type: "ID1_42MM"
   scope:
     topic: "/controllers/scope_controller/command"
-    on_pos: 1.79559
+    on_pos: 1.91
     off_pos: 0.1
   image_transmission:
     topic: "/controllers/image_transmission_controller/command"
-    on_pos: -0.669
-    off_pos: -0.4
+    on_pos: -0.4
+    off_pos: -0.3
   detection_switch:
     fail_limit: 10
     service_name: "/Processor/status_switch"
@@ -138,12 +141,6 @@ controllers:
     pid: { p: 8.0, i: 0.0, d: 0.3, i_clamp_max: 0.0, i_clamp_min: -0.0, antiwindup: true, publish_state: true }
 
   image_transmission_controller:
-    type: rm_position_controller/RMPositionController
-    publish_rate: 50
-    pos_controller1:
-      joint: "image_transmission_joint"
-      pid: { p: 1.1, i: 14.0, d: 0.02, i_clamp_max: 0.0, i_clamp_min: -0.08, antiwindup: true, publish_state: true }
-    pos_controller2:
-      joint: "image_transmission_joint"
-      pid: { p: 1.5, i: 20.0, d: 0.035, i_clamp_max: 0.0, i_clamp_min: -0.1, antiwindup: true, publish_state: true }
-    threshold: 0.03
+    type: effort_controllers/JointPositionController
+    joint: "image_transmission_joint"
+    pid: { p: 1.2, i: 15.0, d: 0.02, i_clamp_max: 0.0, i_clamp_min: -0.08, antiwindup: true, publish_state: true }

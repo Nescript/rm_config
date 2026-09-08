@@ -24,22 +24,22 @@
 
     <node name="armor_processor" pkg="armor_processor" type="armor_processor" respawn="true"/>
 
-<!--    <node pkg="nodelet" type="nodelet" name="forecast"-->
-<!--        args="load rm_forecast/Forecast_Node vision_nodelet" >-->
-<!--        <rosparam file="$(find rm_forecast)/config/forecast.yaml" command="load" />-->
-<!--        <rosparam file="$(find rm_forecast)/config/camera.yaml" command="load" />-->
-<!--       <remap from="/hk_camera/image_raw" to="/$(arg camera_type)/$(arg camera_name)/image_raw"/>-->
-<!--    </node>-->
-
     <node pkg="nodelet" type="nodelet" name="forecast"
-          args="load fft_forecast/Forecast_Node vision_nodelet" respawn="true">
-        <rosparam file="$(find fft_forecast)/config/forecast.yaml" command="load" />
-        <rosparam file="$(find fft_forecast)/config/camera.yaml" command="load" />
-        <remap from="/hk_camera/image_raw" to="/$(arg camera_type)/$(arg camera_name)/image_raw"/>
-        <remap from="/hk_camera/camera_info" to="/$(arg camera_type)/$(arg camera_name)/camera_info"/>
+        args="load rm_forecast/Forecast_Node vision_nodelet" >
+        <rosparam file="$(find rm_forecast)/config/forecast.yaml" command="load" />
+        <rosparam file="$(find rm_forecast)/config/camera.yaml" command="load" />
+       <remap from="/hk_camera/image_raw" to="/$(arg camera_type)/$(arg camera_name)/image_raw"/>
     </node>
 
-<!--     <include file="$(find buff_vision)/launch/buff_nodelet.launch"/> -->
+<!--    <node pkg="nodelet" type="nodelet" name="forecast" -->
+<!--          args="load fft_forecast/Forecast_Node vision_nodelet" respawn="true"> -->
+<!--        <rosparam file="$(find fft_forecast)/config/forecast.yaml" command="load" /> -->
+<!--        <rosparam file="$(find fft_forecast)/config/camera.yaml" command="load" /> -->
+<!--        <remap from="/hk_camera/image_raw" to="/$(arg camera_type)/$(arg camera_name)/image_raw"/> -->
+<!--        <remap from="/hk_camera/camera_info" to="/$(arg camera_type)/$(arg camera_name)/camera_info"/> -->
+<!--    </node> -->
+
+<!--    <include file="$(find buff_vision)/launch/buff_nodelet.launch"/> -->
 
     <include file="$(find windmill)/launch/windmill.launch"/>
 </launch>

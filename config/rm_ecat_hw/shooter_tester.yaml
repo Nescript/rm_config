@@ -1,0 +1,9 @@
+ethercat_master:
+  time_step: 0.001
+
+ethercat_devices:
+  - type: Rm
+    name: RmSlave1
+    configuration_file: device_configurations/shooter_tester.yaml
+    ethercat_bus: enx207bd23feaf8
+    ethercat_address: 1
