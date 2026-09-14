@@ -141,7 +141,7 @@ controllers:
     #    pid_left_leg: { p: 800.0, i: 50., d: 60, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
     #    pid_right_leg: { p: 800.0, i: 50., d: 60, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
     pid_theta_diff: { p: 400.0, i: 0.0, d: 3.5, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
-    pid_roll: { p: 1500.0, i: 0, d: 50., i_clamp_max: 30.0, i_clamp_min: -30.0, antiwindup: true, publish_state: true }
+    pid_roll: { p: 1500.0, i: 0, d: 35., i_clamp_max: 30.0, i_clamp_min: -30.0, antiwindup: true, publish_state: true }
     pid_yaw_pos: { p: 0.0, i: 0.0, d: 0.0, i_clamp_max: 3.0, i_clamp_min: 3.0, antiwindup: true, publish_state: true }
     pid_yaw_vel: { p: 0.7, i: 4.0, d: 0., i_clamp_max: 1.5, i_clamp_min: -1.5, antiwindup: true, publish_state: true }
     pid_left_leg_theta: { p: 45.0, i: 0., d: 5., i_clamp_max: 2.0, i_clamp_min: -2.0, antiwindup: true, publish_state: true }
@@ -169,6 +169,12 @@ controllers:
     # VMC config
     l1: 0.21
     l2: 0.248
+    l3: 0.248
+    l4: 0.21
+    l5: 0.0
+    five_link: true
+    hip_offset: 3.141592653589793
+    knee_offset: 0.0
 
     # LQR model config
     L_weight: 0.53
@@ -220,17 +226,19 @@ controllers:
     #    r: [ 375, 15 ]
 
     # 05-17
-    q: [ 35000.0, 1, 8000.0, 500, 90000.0, 1 ]
-    r: [ 250, 7.5 ]
+    q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    r: [ 450, 7.5 ]
 
     x_bias: 0.05
+    # 0.08 for video 1
+    #x_bias: 0.05
     theta_bias: 0.13
     pitch_bias: -0.0
     roll_bias: 0.
     # not tested 6-8
     #    raw_pitch_bias: 0.13
     raw_pitch_bias: 0.
-    raw_theta_bias: 0.
+    raw_theta_bias: 0.13
 
     # under_lower_threshold: -M_PI / 2 + 0.7
     under_lower_threshold: -0.8708
@@ -251,7 +259,11 @@ controllers:
     upstair_exit_length_threshold: 0.24
     # upstair_des_theta: M_PI_2 - 0.6
     arrive_time_threshold: 1.5
-    jumpOverTime: 2.0
-    jump_up_force: 200
-    off_ground_force: 175
-    down5cmStairPitchThreshold: 0.2
+    jumpOverTime: 5.0
+    #    jump_up_force: 225
+    #    off_ground_force: 150
+    jump_up_force: 210
+    off_ground_force: 90
+    
+    down5cmStairPitchThreshold: 0.1
+    down5cmStairThetaThreshold: 0.2
