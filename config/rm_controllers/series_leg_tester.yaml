@@ -1,0 +1,120 @@
+controllers:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+  robot_state_controller:
+    type: robot_state_controller/RobotStateController
+    publish_rate: 100
+
+  chassis_controller:
+    type: rm_chassis_controllers/BipedalController
+    # ChassisBase
+    publish_rate: 100
+    enable_odom_tf: true
+    publish_odom_tf: true
+    power:
+      effort_coeff: 1.339
+      vel_coeff: 0.016
+      power_offset: 0
+    twist_angular: 0.5233
+    max_odom_vel: 10.0
+    timeout: 0.1
+    pid_follow: { p: 1.75, i: 0, d: 0.3, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+    pid_block_error: { p: 0, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+    twist_covariance_diagonal: [ 0.001, 0.001, 0.001, 0.001, 0.001, 0.001 ]
+
+    # BipedalController
+    # use in gazebo (from series_legged2 sim variants)
+    pid_left_leg: { p: 800.0, i: 50., d: 60, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
+    pid_right_leg: { p: 800.0, i: 50., d: 60, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
+    pid_theta_diff: { p: 400.0, i: 0.0, d: 3.5, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+    pid_roll: { p: 1500.0, i: 0, d: 50., i_clamp_max: 30.0, i_clamp_min: -30.0, antiwindup: true, publish_state: true }
+    pid_yaw_pos: { p: 0.0, i: 0.0, d: 0.0, i_clamp_max: 3.0, i_clamp_min: 3.0, antiwindup: true, publish_state: true }
+    pid_yaw_vel: { p: 0.7, i: 4.0, d: 0., i_clamp_max: 1.5, i_clamp_min: -1.5, antiwindup: true, publish_state: true }
+    pid_left_leg_theta: { p: 45.0, i: 0., d: 5., i_clamp_max: 2.0, i_clamp_min: -2.0, antiwindup: true, publish_state: true }
+    pid_right_leg_theta: { p: 45.0, i: 0., d: 5., i_clamp_max: 2.0, i_clamp_min: -2.0, antiwindup: true, publish_state: true }
+    pid_left_leg_theta_vel: { p: 6.0, i: 3.0, d: 0., i_clamp_max: 10.0, i_clamp_min: -10.0, antiwindup: true, publish_state: true }
+    pid_right_leg_theta_vel: { p: 6.0, i: 3.0, d: 0., i_clamp_max: 10.0, i_clamp_min: -10.0, antiwindup: true, publish_state: true }
+    pid_left_wheel_vel: { p: 0.35, i: 0.0, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+    pid_right_wheel_vel: { p: 0.35, i: 0.0, d: 0.0, i_clamp_max: 0.01, i_clamp_min: -0.01, antiwindup: true, publish_state: true }
+    pid_wheel_vel_diff: { p: 0.25, i: 0.0, d: 0.0, i_clamp_max: 0.1, i_clamp_min: -0.1, antiwindup: true, publish_state: true }
+
+    pid_left_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
+    pid_right_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
+
+    # No physical springs on this fictional robot; gravity support scaled to ~6.3kg total mass
+    spring_s2: 0.0486
+    spring_s3: 0.20
+    spring_alpha_s: 0.2448
+    gravity_force: 82
+    spring_force: 0
+    default_leg_length: 0.20
+
+    unstick_threshold: 5
+    # VMC config: standard five-link formulas with EFFECTIVE lengths fitted to the real
+    # cross-linkage transmission (motor on the base rocker linkage_2). Fit over the stand
+    # region: foot error <= 0.3 mm, polar Jacobian error ~1% (~/fivelink_fit.py).
+    # knee_offset maps the rocker raw angle to VMC phi4: phi4 = raw + 1.19826.
+    l1: 0.21
+    l2: 0.248
+    l3: 0.40839
+    l4: 0.29798
+    l5: 0.0
+    five_link: true
+    knee_offset: -0.15174
+    hip_offset: 2.94159
+
+    # LQR model config
+    L_weight: 0.53
+    Lm_weight: 0.47
+    # 机体质心距离转轴位置
+    l: 0.04
+    # 轮子质量
+    m_w: 0.8
+    # 摆杆质量 (single leg excl. wheel: thigh 0.24 + shank 0.18 + linkages ~0.11)
+    m_p: 0.53
+    # 机体质量 (chassis 12.667 + lumped gimbal 1.0)
+    M: 13.67
+    # 轮子转动惯量 0.5*m*r^2
+    i_w: 0.00144
+    # 摆杆转动惯量
+    i_p: 0.007
+    # 机体转动惯量 (12.667kg box 0.5x0.061 pitch inertia ~0.268 + lumped gimbal)
+    i_m: 0.27
+
+    g: 9.81
+    # 轮子半径
+    wheel_radius: 0.06
+    # 轮距 (0.446 leg plane + 2x25mm outboard wheel offset)
+    wheel_track: 0.496
+    # 底盘高度
+    chassis_high: 0.115
+
+    # theta d_theta x dx phi d_phi
+    # dynamics now match series_legged2 (~16kg), use its tuned gains directly
+    q: [ 35000.0, 1, 8000.0, 500, 90000.0, 1 ]
+    r: [ 250, 7.5 ]
+
+    x_bias: 0.05
+    theta_bias: 0.0
+    pitch_bias: -0.0
+    roll_bias: 0.
+    raw_pitch_bias: 0.
+    raw_theta_bias: 0.
+
+    under_lower_threshold: -0.8708
+    under_upper_threshold: -0.8
+    front_lower_threshold: -0.8708
+    front_upper_threshold: 2.6416
+    behind_lower_threshold: -0.8
+    behind_upper_threshold: 2.6416
+    upstair_des_theta: 1.1
+    upstair_des_length: 0.14
+    upstair_exit_theta_threshold: 1.0
+    upstair_exit_length_threshold: 0.24
+    arrive_time_threshold: 1.5
+    jumpOverTime: 2.0
+    # same as series_legged2 (dynamics now match)
+    jump_up_force: 200
+    off_ground_force: 175
+    down5cmStairPitchThreshold: 0.2

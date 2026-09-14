@@ -1,0 +1,128 @@
+rm_manual:
+  # Must stay "series_legged": rm_manual/main.cpp matches this string to select SeriesLeggedManual
+  robot_type: "series_legged"
+  dbus_topic: "/rm_ecat_hw/dbus"
+  chassis_calibrate_motor: [ "left_hip_motor", "right_hip_motor", "left_knee_motor", "right_knee_motor" ]
+  gimbal_calibrate_motor: [ "" ]
+  shooter_calibrate_motor: [ "" ]
+  supply_frame: "yaw"
+  debug_gimbal_flag: false
+  chassis:
+    topic: "/cmd_chassis"
+    accel_x:
+      - [ 45.0,12.5 ]
+    accel_y:
+      - [ 45.0,12.5 ]
+    accel_z:
+      - [ 45.0,24.0 ]
+    safety_power: 60
+    capacitor_threshold: 0.25
+    charge_power: 30
+    extra_power: 30
+    burst_power: 30
+    standard_power: 45
+    buffer_threshold: 10
+    minimum_power: 30
+    power_gain: 0.0
+    total_burst_time: 10
+    is_new_capacitor: true
+  balance:
+    flank_frame: "flank_frame"
+    reverse_frame: "yaw_reverse_frame"
+    legged_wheel_chassis:
+      topic: "/leg_cmd"
+      unstick_topic: "/controllers/chassis_controller/unstick/two_leg_unstick"
+      # series_legged2 leg length setpoints (workspace l1+l2 = 0.458m)
+      short_leg_length: 0.15
+      mid_leg_length: 0.21
+      high_leg_length: 0.348
+      retraction_leg_length: 0.12
+      jump_up_range_threshold: 0.9
+  vel:
+    topic: "/cmd_vel"
+    power_limit_topic: "/cmd_chassis"
+    max_linear_x:
+      - [ 35.0,2.25 ]
+      - [ 60.0,2.28 ]
+      - [ 80.0,2.3 ]
+    max_linear_y:
+      - [ 35.0,2.3 ]
+      - [ 60.0,2.35 ]
+      - [ 80.0,2.4 ]
+    max_angular_z:
+      - [ 60.0,9.5 ]
+      - [ 80.0,10.0 ]
+      - [ 100.0,10.5 ]
+    gyro_move_reduction: 0.5
+    gyro_rotate_reduction: 1.0
+  # gimbal/shooter blocks kept as inert params: the manual class parses them,
+  # but no gimbal/shooter controllers exist on this robot
+  gimbal:
+    topic: "/controllers/gimbal_controller/command"
+    max_yaw_vel: 6.28
+    max_pitch_vel: 5.0
+    gimbal_scale: 10.0
+    track_timeout: 0.5
+    finish_turning_threshold: 2.9
+    target_cost_function:
+      k_pos: 1.0
+      k_vel: 1.0
+      k_hp: 1.0
+      k_freq: 1.0
+      timeout: 0.05
+  shooter:
+    topic: "/controllers/shooter_controller/command"
+    track_armor_error_tolerance: 0.12
+    untrack_armor_error_tolerance: 0.12
+    max_track_target_vel: 10.0
+    track_buff_error_tolerance: 0.12
+    target_acceleration_tolerance: 99.0
+    speed_10m_per_speed: 23.5
+    speed_15m_per_speed: 23.5
+    speed_16m_per_speed: 23.5
+    speed_18m_per_speed: 23.5
+    speed_30m_per_speed: 23.5
+    wheel_speed_15: 688.0
+    wheel_speed_18: 688.0
+    wheel_speed_30: 688.0
+    extra_wheel_speed_once: 5.0
+    heat_limit:
+      low_shoot_frequency: 15.0
+      high_shoot_frequency: 15.0
+      burst_shoot_frequency: 15.0
+      minimal_shoot_frequency: 1.75
+      safe_shoot_frequency: 3
+      safe_speed_limit: 30
+      heat_coeff: 15.0
+      use_local_heat_: true
+      local_heat_protect_threshold: 40
+      type: "ID1_17MM"
+  detection_switch:
+    fail_limit: 10
+    service_name: "/Processor/status_change"
+  buff_switch:
+    fail_limit: 10
+    service_name: "/buff_status_switch"
+  buff_type_switch:
+    fail_limit: 10
+    service_name: "/forecast/status_switch"
+  exposure_switch:
+    fail_limit: 10
+    service_name: "/exposure_status_switch"
+
+  controllers_list:
+    state_controllers:
+      - controllers/joint_state_controller
+      - controllers/robot_state_controller
+    main_controllers:
+      - controllers/chassis_controller
+
+  chassis_calibration:
+    - start_controllers:
+        - ""
+      stop_controllers:
+        - ""
+      services_name:
+        - ""
+  gimbal_calibration:
+  shooter_calibration:
