@@ -155,6 +155,29 @@ controllers:
     pid_left_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
     pid_right_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
 
+    # TinyMPC normal-mode controller. The model is linearized at mpc_model_leg_length.
+    mpc_enabled: true
+    mpc_model_leg_length: 0.20
+    mpc_dt: 0.01
+    mpc_horizon: 15
+    mpc_max_iter: 50
+    mpc_rho: 1.0
+    # [wheel torque, virtual leg pitch torque]
+    mpc_input_min: [ -2.66, -40.0 ]
+    mpc_input_max: [ 2.66, 40.0 ]
+
+    # DM8009 is direct-drive in the URDF. M3508 ratings already include its official 1:16 gearbox.
+    leg_joint_torque_continuous: 20.0
+    leg_joint_torque_peak: 40.0
+    wheel_motor_torque_continuous: 2.8
+    wheel_motor_torque_peak: 5.0
+    wheel_reference_reduction: 16.0
+    # series_legged2/chassis.urdf.xacro: abs(258/17)
+    wheel_urdf_reduction: 15.176470588235294
+    # URDF has no efficiency field; keep the initial limit conservative and explicit.
+    wheel_transmission_efficiency: 1.0
+    enable_peak_torque: false
+
     spring_s2: 0.0486
     spring_s3: 0.20
     spring_alpha_s: 0.2448
