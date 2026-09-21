@@ -155,9 +155,10 @@ controllers:
     pid_left_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
     pid_right_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
 
-    # TinyMPC normal-mode controller. The model is linearized at mpc_model_leg_length.
+    # TinyMPC normal-mode controller with gain-scheduled leg lengths.
     mpc_enabled: true
-    mpc_model_leg_length: 0.20
+    # Operating points (m): low/mid/high leg lengths. Solver closest to current L0 is used.
+    mpc_leg_lengths: [ 0.20, 0.25, 0.30, 0.35 ]
     mpc_dt: 0.01
     mpc_horizon: 15
     mpc_max_iter: 50
