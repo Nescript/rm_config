@@ -167,6 +167,12 @@ controllers:
     mpc_input_min: [ -2.66, -40.0 ]
     mpc_input_max: [ 2.66, 40.0 ]
 
+    # Rollover constraint: cap forward speed so v*yaw_rate < margin*g*d/(2*h).
+    # h is approximated as leg_length + chassis_high. margin < 1 adds safety.
+    rollover_constraint_enabled: true
+    rollover_margin: 0.7
+    rollover_min_yaw_rate: 0.5
+
     # DM8009 is direct-drive in the URDF. M3508 ratings already include its official 1:16 gearbox.
     leg_joint_torque_continuous: 20.0
     leg_joint_torque_peak: 40.0
