@@ -158,11 +158,12 @@ controllers:
     spring_s2: 0.0486
     spring_s3: 0.20
     spring_alpha_s: 0.2448
-    gravity_force: 110
-    spring_force: 250
+    # use in real
+    #    gravity_force: 110
+    #    spring_force: 250
     # use in gazebo
-    #    gravity_force: 70
-    #    spring_force: 0
+    gravity_force: 70
+    spring_force: 0
     default_leg_length: 0.12
 
     unstick_threshold: 5
@@ -209,7 +210,6 @@ controllers:
     #    q: [ 10250.0, 1, 5500.0, 50, 50000.0, 1 ]
     #    r: [ 100, 10 ]
 
-
     # 05-05-1
     #    q: [ 7500.0, 1, 2750.0, 1, 30000.0, 1 ]
     #    r: [ 40, 2 ]
@@ -227,8 +227,10 @@ controllers:
     #    r: [ 375, 15 ]
 
     # 05-17
-    q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
-    r: [ 450, 7.5 ]
+    # q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    # r: [ 450, 7.5 ]
+    q: [ 35000.0, 1, 25000.0, 500, 900000.0, 100000 ]
+    r: [ 50, 5 ]
 
     x_bias: 0.05
     # 0.08 for video 1
@@ -267,3 +269,19 @@ controllers:
     off_ground_force: 90
     down5cmStairPitchThreshold: 0.1
     down5cmStairThetaThreshold: 0.2
+
+    # TinyMPC normal-mode controller with continuous 1D LPV leg-length scheduling.
+    mpc_enabled: true
+    mpc_lpv_leg_min: 0.12
+    mpc_lpv_leg_max: 0.36
+    mpc_lpv_sample_count: 31
+    mpc_lpv_nominal_leg_length: 0.20
+    mpc_dt: 0.002
+    # 0.01 by default
+    mpc_horizon: 16
+    # 15 by default
+    mpc_max_iter: 100
+    mpc_rho: 1.0
+    # [wheel torque, virtual leg pitch torque]
+    mpc_input_min: [ -4.68, -40.0 ]
+    mpc_input_max: [ 4.68, 40.0 ]
