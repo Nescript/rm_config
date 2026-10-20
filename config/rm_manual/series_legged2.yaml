@@ -10,19 +10,22 @@ rm_manual:
   chassis:
     topic: "/cmd_chassis"
     accel_x:
-      - [ 45.0,12.5 ]
+      - [ 45.0,7.0 ]
     accel_y:
-      - [ 45.0,12.5 ]
+      - [ 45.0,13.5 ]
     accel_z:
-      - [ 45.0,24.0 ]
-    safety_power: 60
-    capacitor_threshold: 0.25
-    charge_power: 30
-    extra_power: 30
-    burst_power: 30
-    standard_power: 45
+      - [ 45.0,30.0 ]
+    safety_power: 70
+    capacitor_threshold: 0.1
+    # While capacity is less than 0.1, it will exit burst mode and enter normal
+    disable_normal_cap_threshold: 0.3
+    # While capcity is more than this threshold, it will use capacity's power
+    charge_power: 40
+    extra_power: 60
+    burst_power: 90
+    standard_power: 85
     buffer_threshold: 10
-    minimum_power: 30
+    minimum_power: 40
     power_gain: 0.0
     total_burst_time: 10
     is_new_capacitor: true
@@ -37,13 +40,40 @@ rm_manual:
       high_leg_length: 0.348
       retraction_leg_length: 0.12
       jump_up_range_threshold: 0.9
+      power_limit:
+        power_coeff_topic: "/power_model/c"
+        apply_online_model: false
+        capacity_full_energy: 100.0
+        energy_convergence: 50.0
+        energy_feedback_slope: 2.5
+        minimum_power_ratio: 0.7
+        normal_extra_power: 100.0
+        acceleration_extra_power: 150.0
+        gyro_extra_power: 70.0
+        dangerous_energy: 5.0
+        input_timeout: 2.0
+        model_timeout: 3.0
+        power_model:
+          initial_coefficients:
+            - 8.24846935267191
+            - 0.0
+            - 0.11410260436263746
+            - 0.0
+            - 0.0
+            - 16.282059741025968
+            - 1.3725156658483706
+            - 14.814042383039267
+            - 0.7125574461523532
+            - 1.6314625581478164
+            - 0.8286576590951686
+            - 0.0
   vel:
     topic: "/cmd_vel"
     power_limit_topic: "/cmd_chassis"
     max_linear_x:
-      - [ 35.0,2.25 ]
-      - [ 60.0,2.28 ]
-      - [ 80.0,2.3 ]
+      - [ 35.0,2.2 ]
+      - [ 60.0,2.21 ]
+      - [ 80.0,2.22 ]
     max_linear_y:
       - [ 35.0,2.3 ]
       - [ 60.0,2.35 ]
@@ -53,12 +83,14 @@ rm_manual:
       - [ 80.0,10.0 ]
       - [ 100.0,10.5 ]
 
-    gyro_move_reduction: 0.5
-    gyro_rotate_reduction: 1.0
+    gyro_move_reduction: 0.4
+    gyro_rotate_reduction: 0.7
   gimbal:
     topic: "/controllers/gimbal_controller/command"
     max_yaw_vel: 6.28
     max_pitch_vel: 5.0
+    time_constant_rc: 0.02
+    time_constant_pc: 0.08
     gimbal_scale: 10.0
     track_timeout: 0.5
     finish_turning_threshold: 2.9
@@ -95,10 +127,12 @@ rm_manual:
       use_local_heat_: true
       local_heat_protect_threshold: 40
       type: "ID1_17MM"
+  # Temporary no-op configuration: SeriesLeggedManual currently inherits
+  # cover handling even though this robot has no cover actuator.
   cover:
-    topic: "/controllers/cover_controller/command"
-    on_pos: -1.460
-    off_pos: -0.02
+    topic: "/dummy/series_legged_cover_command"
+    on_pos: 0.0
+    off_pos: 0.0
   detection_switch:
     fail_limit: 10
     service_name: "/Processor/status_change"
@@ -120,9 +154,9 @@ rm_manual:
       - controllers/orientation_controller
       - controllers/chassis_controller
       - controllers/gimbal_controller
-    #      - controllers/shooter_controller
+      # - controllers/shooter_controller
     calibration_controllers:
-      - controllers/trigger_calibration_controller
+      # - controllers/trigger_calibration_controller
 
   chassis_calibration:
     - start_controllers:
@@ -132,13 +166,13 @@ rm_manual:
       services_name:
         - ""
   gimbal_calibration:
-  shooter_calibration:
-    - start_controllers:
-        - controllers/trigger_calibration_controller
-      stop_controllers:
-        - controllers/shooter_controller
-      services_name:
-        - /controllers/trigger_calibration_controller/is_calibrated
+  #shooter_calibration:
+  #  - start_controllers:
+  #      - controllers/trigger_calibration_controller
+  #    stop_controllers:
+  #      - controllers/shooter_controller
+  #    services_name:
+  #      - /controllers/trigger_calibration_controller/is_calibrated
 
 #controllers:
 #  cover_controller:

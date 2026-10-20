@@ -227,12 +227,14 @@ controllers:
     #    r: [ 375, 15 ]
 
     # 05-17
-    # q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
-    # r: [ 450, 7.5 ]
+    #q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    #r: [ 450, 7.5 ]
     q: [ 35000.0, 1, 25000.0, 500, 900000.0, 100000 ]
     r: [ 50, 5 ]
-
-    x_bias: 0.05
+    # Jump gains validated in rm_ws; normal balance keeps the MPC weights above.
+    jump_q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    jump_r: [ 50, 7.5 ]
+    x_bias: 0.0
     # 0.08 for video 1
     #x_bias: 0.05
     theta_bias: 0.13
@@ -265,23 +267,28 @@ controllers:
     jumpOverTime: 2.0
     #    jump_up_force: 225
     #    off_ground_force: 150
-    jump_up_force: 300
+    jump_up_force: 250
     off_ground_force: 90
+    jump_joint_effort_limit: 80.0
     down5cmStairPitchThreshold: 0.1
     down5cmStairThetaThreshold: 0.2
 
     # TinyMPC normal-mode controller with continuous 1D LPV leg-length scheduling.
+    # RAW first brakes to a standstill; timeout never releases yaw.
+    raw_brake_speed_threshold: 0.1
+    raw_brake_hold_time: 0.1
+    raw_brake_timeout: 3.0
     mpc_enabled: true
     mpc_lpv_leg_min: 0.12
     mpc_lpv_leg_max: 0.36
     mpc_lpv_sample_count: 31
     mpc_lpv_nominal_leg_length: 0.20
-    mpc_dt: 0.002
+    mpc_dt: 0.001
     # 0.01 by default
-    mpc_horizon: 16
+    mpc_horizon: 40
     # 15 by default
     mpc_max_iter: 100
     mpc_rho: 1.0
-    # [wheel torque, virtual leg pitch torque]
-    mpc_input_min: [ -4.68, -40.0 ]
-    mpc_input_max: [ 4.68, 40.0 ]
+    # [wheel joint torque, each leg joint motor torque], N.m
+    mpc_input_min: [ -3.58, -80.0 ]
+    mpc_input_max: [ 3.58, 80.0 ]

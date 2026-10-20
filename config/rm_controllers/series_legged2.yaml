@@ -156,38 +156,6 @@ controllers:
     pid_left_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
     pid_right_leg_stand_up: { p: 800.0, i: 0.0, d: 35.0, i_clamp_max: 20.0, i_clamp_min: -20.0, antiwindup: true, publish_state: true }
 
-    # TinyMPC normal-mode controller with continuous 1D LPV leg-length scheduling.
-    mpc_enabled: true
-    mpc_lpv_leg_min: 0.12
-    mpc_lpv_leg_max: 0.36
-    mpc_lpv_sample_count: 31
-    mpc_lpv_nominal_leg_length: 0.20
-    mpc_dt: 0.01
-    mpc_horizon: 15
-    mpc_max_iter: 50
-    mpc_rho: 1.0
-    # [wheel torque, virtual leg pitch torque]
-    mpc_input_min: [ -2.66, -40.0 ]
-    mpc_input_max: [ 2.66, 40.0 ]
-
-    # Rollover constraint: cap forward speed so v*yaw_rate < margin*g*d/(2*h).
-    # h is approximated as leg_length + chassis_high. margin < 1 adds safety.
-    rollover_constraint_enabled: true
-    rollover_margin: 0.7
-    rollover_min_yaw_rate: 0.5
-
-    # DM8009 is direct-drive in the URDF. M3508 ratings already include its official 1:16 gearbox.
-    leg_joint_torque_continuous: 20.0
-    leg_joint_torque_peak: 40.0
-    wheel_motor_torque_continuous: 2.8
-    wheel_motor_torque_peak: 5.0
-    wheel_reference_reduction: 16.0
-    # series_legged2/chassis.urdf.xacro: abs(258/17)
-    wheel_urdf_reduction: 15.176470588235294
-    # URDF has no efficiency field; keep the initial limit conservative and explicit.
-    wheel_transmission_efficiency: 1.0
-    enable_peak_torque: false
-
     spring_s2: 0.0486
     spring_s3: 0.20
     spring_alpha_s: 0.2448
@@ -241,7 +209,6 @@ controllers:
     #    q: [ 10250.0, 1, 5500.0, 50, 50000.0, 1 ]
     #    r: [ 100, 10 ]
 
-
     # 05-05-1
     #    q: [ 7500.0, 1, 2750.0, 1, 30000.0, 1 ]
     #    r: [ 40, 2 ]
@@ -259,10 +226,14 @@ controllers:
     #    r: [ 375, 15 ]
 
     # 05-17
-    q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
-    r: [ 450, 7.5 ]
-
-    x_bias: 0.05
+    #q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    #r: [ 450, 7.5 ]
+    q: [ 20000.0, 10, 12500.0, 50, 200000.0, 1 ]
+    r: [ 450, 5 ]
+    # Jump gains validated in rm_ws; normal balance keeps the MPC weights above.
+    jump_q: [ 35000.0, 1, 12500.0, 500, 90000.0, 1 ]
+    jump_r: [ 50, 7.5 ]
+    x_bias: 0.0
     # 0.08 for video 1
     #x_bias: 0.05
     theta_bias: 0.13
@@ -292,11 +263,31 @@ controllers:
     upstair_exit_length_threshold: 0.24
     # upstair_des_theta: M_PI_2 - 0.6
     arrive_time_threshold: 1.5
-    jumpOverTime: 5.0
+    jumpOverTime: 2.0
     #    jump_up_force: 225
     #    off_ground_force: 150
-    jump_up_force: 210
+    jump_up_force: 250
     off_ground_force: 90
-    
+    jump_joint_effort_limit: 80.0
     down5cmStairPitchThreshold: 0.1
     down5cmStairThetaThreshold: 0.2
+
+    # TinyMPC normal-mode controller with continuous 1D LPV leg-length scheduling.
+    # RAW first brakes to a standstill; timeout never releases yaw.
+    raw_brake_speed_threshold: 0.1
+    raw_brake_hold_time: 0.1
+    raw_brake_timeout: 3.0
+    mpc_enabled: false
+    mpc_lpv_leg_min: 0.12
+    mpc_lpv_leg_max: 0.36
+    mpc_lpv_sample_count: 31
+    mpc_lpv_nominal_leg_length: 0.20
+    mpc_dt: 0.001
+    # 0.01 by default
+    mpc_horizon: 40
+    # 15 by default
+    mpc_max_iter: 100
+    mpc_rho: 1.0
+    # [wheel joint torque, each leg joint motor torque], N.m
+    mpc_input_min: [ -3.58, -40.0 ]
+    mpc_input_max: [ 3.58, 40.0 ]

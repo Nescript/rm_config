@@ -42,11 +42,13 @@ rm_manual:
     reverse_frame: "yaw_reverse_frame"
     legged_wheel_chassis:
       topic: "/leg_cmd"
-      unstick_topic: "/controllers/chassis_controller/unstick"
+      unstick_topic: "/controllers/chassis_controller/unstick/two_leg_unstick"
       short_leg_length: 0.15
       mid_leg_length: 0.21
       high_leg_length: 0.348
       retraction_leg_length: 0.12
+      wave_leg_period: 4.0  # seconds per SHORT -> HIGH -> SHORT cycle in Ctrl+E gyro mode
+      raw_ready_topic: "/controllers/chassis_controller/raw_ready"
       jump_up_range_threshold: 0.9
   vel:
     topic: "/cmd_vel"
